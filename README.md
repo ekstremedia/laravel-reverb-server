@@ -17,6 +17,57 @@ A self-contained, dockerised [Laravel Reverb](https://laravel.com/docs/reverb) W
 
 ## Get it running
 
+### Option A — prebuilt image (no clone needed)
+
+Multi-arch images (`linux/amd64`, `linux/arm64`) are published on Docker Hub: [`terjen/laravel-reverb-server`](https://hub.docker.com/r/terjen/laravel-reverb-server). Drop a `docker-compose.yml` like the one below next to a `.env` and `docker compose up -d` — the entrypoint generates and persists an `APP_KEY` in the storage volume on first boot, so no key juggling.
+
+```yaml
+services:
+  app:
+    image: terjen/laravel-reverb-server:latest
+    restart: unless-stopped
+    environment:
+      APP_URL: http://laravel-reverb-server.test:8121
+      REVERB_HOST: laravel-reverb-server.test
+      REVERB_PORT: 8180
+      REVERB_SCHEME: http
+      REVERB_APP_ID: local-app-id
+      REVERB_APP_KEY: local-app-key
+      REVERB_APP_SECRET: local-app-secret
+    ports:
+      - "8121:8000"
+    volumes:
+      - sqlite-data:/app/database
+      - app-storage:/app/storage
+    depends_on: [reverb]
+    command: ["frankenphp", "php-server", "--listen", "0.0.0.0:8000", "--root", "public/"]
+
+  reverb:
+    image: terjen/laravel-reverb-server:latest
+    restart: unless-stopped
+    environment:
+      REVERB_SERVER_HOST: 0.0.0.0
+      REVERB_SERVER_PORT: 8180
+      REVERB_APP_ID: local-app-id
+      REVERB_APP_KEY: local-app-key
+      REVERB_APP_SECRET: local-app-secret
+    ports:
+      - "8180:8180"
+    volumes:
+      - sqlite-data:/app/database
+      - app-storage:/app/storage
+    networks:
+      default:
+        aliases: [laravel-reverb-server.test]
+    command: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8180", "--no-interaction"]
+
+volumes:
+  sqlite-data:
+  app-storage:
+```
+
+### Option B — clone and build (for development)
+
 ```sh
 make up
 ```
