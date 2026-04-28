@@ -2,8 +2,7 @@
 
 Self-hosted [Laravel Reverb](https://laravel.com/docs/reverb) in a single container — Pusher-protocol WebSocket broadcasting plus a small dashboard. Spin it up, point your apps at it, broadcast.
 
-![Dashboard](docs/screenshots/dashboard.png)
-
+![Welcome page](docs/screenshots/welcome.png)
 ## Run it
 
 ```sh
@@ -46,7 +45,9 @@ Then `composer require laravel/reverb && npm i -D laravel-echo pusher-js`, and b
 - `GET /api/stats` returns reachability + counters as JSON, no auth.
 - Stats persisted to SQLite (WAL mode, idempotent migrations on boot).
 
-![Welcome page](docs/screenshots/welcome.png)
+![Dashboard](docs/screenshots/dashboard.png)
+
+
 ![Log viewer](docs/screenshots/log-viewer.png)
 
 ## Develop
