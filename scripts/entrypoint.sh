@@ -8,6 +8,7 @@ KEY_FILE="/app/storage/app/.app-key"
 # `docker run -p 8000:8000 -p 8080:8080 ... solo` one-liner work without
 # any extra env. Override before this point if you need different values.
 if [ "$1" = "solo" ]; then
+    : "${BROADCAST_CONNECTION:=reverb}"
     : "${REVERB_HOST:=localhost}"
     : "${REVERB_PORT:=8080}"
     : "${REVERB_SCHEME:=http}"
@@ -17,7 +18,8 @@ if [ "$1" = "solo" ]; then
     : "${REVERB_APP_KEY:=local-app-key}"
     : "${REVERB_APP_SECRET:=local-app-secret}"
     : "${APP_URL:=http://localhost:8000}"
-    export REVERB_HOST REVERB_PORT REVERB_SCHEME REVERB_SERVER_HOST REVERB_SERVER_PORT \
+    export BROADCAST_CONNECTION REVERB_HOST REVERB_PORT REVERB_SCHEME \
+           REVERB_SERVER_HOST REVERB_SERVER_PORT \
            REVERB_APP_ID REVERB_APP_KEY REVERB_APP_SECRET APP_URL
 fi
 
