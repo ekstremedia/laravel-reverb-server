@@ -14,3 +14,5 @@ window.Echo = new Echo({
     forceTLS: (reverb.scheme ?? 'http') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
+
+window.dispatchEvent(new CustomEvent('echo:ready'));

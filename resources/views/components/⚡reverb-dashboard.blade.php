@@ -110,11 +110,14 @@ ENV;
             receivedAt: null,
             channel: null,
             init() {
-                if (!window.Echo) return;
-                this.channel = window.Echo.channel('ping');
-                this.channel.listen('.ping', () => {
-                    this.receivedAt = new Date().toLocaleString();
-                });
+                const subscribe = () => {
+                    this.channel = window.Echo.channel('ping');
+                    this.channel.listen('.ping', () => {
+                        this.receivedAt = new Date().toLocaleString();
+                    });
+                };
+                if (window.Echo) subscribe();
+                else window.addEventListener('echo:ready', subscribe, { once: true });
             },
             destroy() {
                 if (!this.channel) return;
@@ -192,15 +195,18 @@ ENV;
                 lastSentAt: null,
                 channel: null,
                 init() {
-                    if (!window.Echo) return;
-                    this.channel = window.Echo.channel('ping');
-                    this.channel.listen('.ping', (e) => {
-                        const now = Date.now();
-                        const sent = new Date(e.sent_at).getTime();
-                        const rtt = now - sent;
-                        this.pings.unshift({ at: new Date().toLocaleTimeString(), rtt, message: e.message });
-                        if (this.pings.length > 8) this.pings.pop();
-                    });
+                    const subscribe = () => {
+                        this.channel = window.Echo.channel('ping');
+                        this.channel.listen('.ping', (e) => {
+                            const now = Date.now();
+                            const sent = new Date(e.sent_at).getTime();
+                            const rtt = now - sent;
+                            this.pings.unshift({ at: new Date().toLocaleTimeString(), rtt, message: e.message });
+                            if (this.pings.length > 8) this.pings.pop();
+                        });
+                    };
+                    if (window.Echo) subscribe();
+                    else window.addEventListener('echo:ready', subscribe, { once: true });
                 },
                 destroy() {
                     if (!this.channel) return;
