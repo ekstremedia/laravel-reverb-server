@@ -36,7 +36,6 @@ RUN --mount=type=cache,target=/root/.npm \
 COPY . .
 
 RUN composer dump-autoload --optimize \
-    && php artisan route:cache \
     && php artisan view:cache
 
 # ---------- runtime: slim FrankenPHP, no node, no composer ----------
