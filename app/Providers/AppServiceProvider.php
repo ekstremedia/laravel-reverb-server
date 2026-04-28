@@ -7,6 +7,7 @@ use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Reverb\Events\ChannelCreated;
@@ -26,6 +27,15 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->recordReverbStats();
+        $this->authorizeLogViewer();
+    }
+
+    protected function authorizeLogViewer(): void
+    {
+        // opcodes/log-viewer aborts in production unless a viewLogViewer
+        // gate (or auth callback) is registered. Any authenticated user
+        // can see logs — the dashboard is already login-gated.
+        Gate::define('viewLogViewer', fn ($user) => $user !== null);
     }
 
     protected function configureDefaults(): void
