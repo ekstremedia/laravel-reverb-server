@@ -108,11 +108,18 @@ ENV;
     <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-zinc-900"
          x-data="{
             receivedAt: null,
+            channel: null,
             init() {
                 if (!window.Echo) return;
-                window.Echo.channel('ping').listen('.ping', () => {
+                this.channel = window.Echo.channel('ping');
+                this.channel.listen('.ping', () => {
                     this.receivedAt = new Date().toLocaleString();
                 });
+            },
+            destroy() {
+                if (!this.channel) return;
+                this.channel.stopListening('.ping');
+                window.Echo.leave('ping');
             }
          }">
         <div class="flex items-center gap-3">
@@ -183,15 +190,22 @@ ENV;
              x-data="{
                 pings: [],
                 lastSentAt: null,
+                channel: null,
                 init() {
                     if (!window.Echo) return;
-                    window.Echo.channel('ping').listen('.ping', (e) => {
+                    this.channel = window.Echo.channel('ping');
+                    this.channel.listen('.ping', (e) => {
                         const now = Date.now();
                         const sent = new Date(e.sent_at).getTime();
                         const rtt = now - sent;
                         this.pings.unshift({ at: new Date().toLocaleTimeString(), rtt, message: e.message });
                         if (this.pings.length > 8) this.pings.pop();
                     });
+                },
+                destroy() {
+                    if (!this.channel) return;
+                    this.channel.stopListening('.ping');
+                    window.Echo.leave('ping');
                 }
              }">
             <flux:heading size="md" class="mb-3">{{ __('Ping / pong log') }}</flux:heading>

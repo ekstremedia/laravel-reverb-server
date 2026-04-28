@@ -1,3 +1,22 @@
+@php
+    $reverbHost = config('broadcasting.connections.reverb.options.host')
+        ?: config('reverb.servers.reverb.host', '127.0.0.1');
+    $reverbPort = (int) (config('broadcasting.connections.reverb.options.port')
+        ?: config('reverb.servers.reverb.port', 8080));
+
+    if ($reverbHost === '0.0.0.0' || $reverbHost === '') {
+        $reverbHost = '127.0.0.1';
+    }
+
+    $reverbReachable = null;
+    $socket = @fsockopen($reverbHost, $reverbPort, $errno, $errstr, 1.0);
+    if ($socket !== false) {
+        fclose($socket);
+        $reverbReachable = true;
+    } else {
+        $reverbReachable = false;
+    }
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -38,6 +57,7 @@
             color: #a3e635;
             background: rgba(255, 255, 255, .02);
         }
+        .pill.offline { color: #f87171; }
         .pill::before {
             content: "";
             width: .45rem;
@@ -46,6 +66,11 @@
             background: #84cc16;
             box-shadow: 0 0 0 0 rgba(132, 204, 22, .5);
             animation: pulse 2.4s cubic-bezier(.4, 0, .6, 1) infinite;
+        }
+        .pill.offline::before {
+            background: #ef4444;
+            box-shadow: none;
+            animation: none;
         }
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(132, 204, 22, .5); }
@@ -92,7 +117,7 @@
 </head>
 <body>
     <main>
-        <span class="pill">Online</span>
+        <span class="pill {{ $reverbReachable ? '' : 'offline' }}">{{ $reverbReachable ? 'Online' : 'Offline' }}</span>
         <h1>Laravel Reverb Server</h1>
         <p class="lead">Lightweight WebSocket broadcasting, ready to go.</p>
         <nav>

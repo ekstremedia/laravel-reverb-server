@@ -17,8 +17,8 @@
     $reverbConfig = [
         'key' => $reverbApp['key'] ?? null,
         'host' => data_get($reverbApp, 'options.host'),
-        'port' => (int) data_get($reverbApp, 'options.port', 80),
-        'scheme' => data_get($reverbApp, 'options.scheme', 'http'),
+        'port' => (int) (data_get($reverbApp, 'options.port') ?: 443),
+        'scheme' => data_get($reverbApp, 'options.scheme') ?: 'https',
     ];
 @endphp
 <script>

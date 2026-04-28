@@ -25,11 +25,11 @@
             <flux:spacer />
 
             <flux:sidebar.nav>
-                <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/reverb" target="_blank">
+                <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/reverb" target="_blank" rel="noopener noreferrer">
                     {{ __('Repository') }}
                 </flux:sidebar.item>
 
-                <flux:sidebar.item icon="book-open-text" href="https://laravel.com/docs/reverb" target="_blank">
+                <flux:sidebar.item icon="book-open-text" href="https://laravel.com/docs/reverb" target="_blank" rel="noopener noreferrer">
                     {{ __('Documentation') }}
                 </flux:sidebar.item>
             </flux:sidebar.nav>
