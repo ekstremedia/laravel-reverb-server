@@ -43,7 +43,6 @@ FROM dunglas/frankenphp:1-php8.4-bookworm AS app
 
 ENV APP_ENV=production \
     APP_DEBUG=false \
-    LOG_LEVEL=warning \
     SERVER_NAME=":8000"
 
 RUN install-php-extensions \
