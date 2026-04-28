@@ -30,6 +30,11 @@ REVERB_HOST=$(read_env REVERB_HOST)
 REVERB_PORT=$(read_env REVERB_PORT)
 REVERB_SCHEME=$(read_env REVERB_SCHEME)
 
+SEED_ADMIN_EMAIL=$(read_env SEED_ADMIN_EMAIL)
+SEED_ADMIN_EMAIL=${SEED_ADMIN_EMAIL:-admin@admin.com}
+SEED_ADMIN_PASSWORD=$(read_env SEED_ADMIN_PASSWORD)
+SEED_ADMIN_PASSWORD=${SEED_ADMIN_PASSWORD:-wspassword}
+
 if [[ -t 1 ]]; then
     GREEN=$'\033[1;32m'
     CYAN=$'\033[1;36m'
@@ -40,8 +45,8 @@ else
 fi
 
 printf '\n%s✅  Site is ready at %s%s\n' "$GREEN" "$APP_URL" "$NC"
-printf '    %sLogin:%s    admin@admin.com\n' "$DIM" "$NC"
-printf '    %sPassword:%s testing123\n\n' "$DIM" "$NC"
+printf '    %sLogin:%s    %s\n' "$DIM" "$NC" "$SEED_ADMIN_EMAIL"
+printf '    %sPassword:%s %s\n\n' "$DIM" "$NC" "$SEED_ADMIN_PASSWORD"
 
 printf "%sPaste these into your other Laravel application's .env to broadcast through this server:%s\n\n" "$CYAN" "$NC"
 
