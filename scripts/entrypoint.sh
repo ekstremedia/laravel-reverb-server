@@ -43,6 +43,11 @@ fi
 # when both app + reverb containers start simultaneously.
 php artisan migrate --force --no-interaction
 
+# DatabaseSeeder uses updateOrCreate, so this is a no-op once the admin
+# user exists. Makes the bare image / solo one-liner usable without an
+# extra `db:seed` step.
+php artisan db:seed --force --no-interaction
+
 # Bake config/events/routes from the runtime env (env_file). Views were
 # already cached at image-build time and don't depend on env. Routes are
 # cached here because Livewire 4's URL prefix is derived from app.key,
