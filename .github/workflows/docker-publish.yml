@@ -17,6 +17,7 @@ concurrency:
 
 env:
   IMAGE_NAME: terjen/laravel-reverb-server
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
 jobs:
   build:
