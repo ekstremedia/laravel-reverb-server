@@ -44,10 +44,12 @@ new class extends Component
     #[Computed]
     public function reverbReachable(): bool
     {
-        $host = config('reverb.servers.reverb.host', '127.0.0.1');
-        $port = (int) config('reverb.servers.reverb.port', 8080);
+        $host = config('broadcasting.connections.reverb.options.host')
+            ?: config('reverb.servers.reverb.host', '127.0.0.1');
+        $port = (int) (config('broadcasting.connections.reverb.options.port')
+            ?: config('reverb.servers.reverb.port', 8080));
 
-        if ($host === '0.0.0.0') {
+        if ($host === '0.0.0.0' || $host === '') {
             $host = '127.0.0.1';
         }
 
@@ -103,7 +105,16 @@ ENV;
 
 <div class="flex h-full w-full flex-1 flex-col gap-4" wire:poll.5s="refreshStats">
     {{-- Header + status --}}
-    <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-zinc-900">
+    <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-zinc-900"
+         x-data="{
+            receivedAt: null,
+            init() {
+                if (!window.Echo) return;
+                window.Echo.channel('ping').listen('.ping', () => {
+                    this.receivedAt = new Date().toLocaleString();
+                });
+            }
+         }">
         <div class="flex items-center gap-3">
             <flux:heading size="lg">{{ __('Reverb WebSocket Server') }}</flux:heading>
 
@@ -118,6 +129,11 @@ ENV;
             <flux:button wire:click="sendPing" variant="primary" icon="paper-airplane">
                 {{ __('Send ping') }}
             </flux:button>
+        </div>
+
+        <div x-show="receivedAt" x-cloak class="basis-full flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400">
+            <flux:icon.check-circle class="size-4" />
+            <span>{{ __('Received ping at') }} <span x-text="receivedAt" class="font-mono"></span></span>
         </div>
     </div>
 

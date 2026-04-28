@@ -17,9 +17,11 @@ read_env() {
     echo "$value"
 }
 
+APP_PORT=$(read_env APP_PORT)
+APP_PORT=${APP_PORT:-8120}
 APP_URL=$(read_env APP_URL)
-APP_PORT_HOST=${APP_PORT:-8120}
-APP_URL=${APP_URL:-http://laravel-reverb-server.test:${APP_PORT_HOST}}
+APP_URL=${APP_URL//\$\{APP_PORT\}/$APP_PORT}
+APP_URL=${APP_URL:-http://laravel-reverb-server.test:${APP_PORT}}
 
 REVERB_APP_ID=$(read_env REVERB_APP_ID)
 REVERB_APP_KEY=$(read_env REVERB_APP_KEY)

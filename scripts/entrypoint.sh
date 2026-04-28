@@ -12,4 +12,9 @@ fi
 # when both app + reverb containers start simultaneously.
 php artisan migrate --force --no-interaction
 
+# Bake config & events from the runtime env (env_file). Routes/views were
+# already cached at image-build time and don't depend on env.
+php artisan config:cache --no-interaction
+php artisan event:cache --no-interaction
+
 exec "$@"

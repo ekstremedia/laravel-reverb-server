@@ -81,7 +81,9 @@ info: ## Print the ready banner with copy-paste .env block
 .env:
 	@echo "→ Copying .env.example to .env"
 	@cp .env.example .env
-	@$(COMPOSE) run --rm --no-deps app php artisan key:generate --force
+	@APP_KEY="base64:$$(openssl rand -base64 32)" && \
+	  sed -i.bak "s|^APP_KEY=.*|APP_KEY=$$APP_KEY|" .env && rm -f .env.bak
+	@echo "→ Generated APP_KEY"
 
 _wait:
 	@printf "→ Waiting for app container "
