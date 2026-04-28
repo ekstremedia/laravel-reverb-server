@@ -19,7 +19,7 @@ A self-contained, dockerised [Laravel Reverb](https://laravel.com/docs/reverb) W
 
 ### One-liner (single container, both processes)
 
-For a quick spin-up — same shape as Mailpit:
+For a quick spin-up:
 
 ```sh
 docker run -d --restart unless-stopped --name reverb-server \
