@@ -9,9 +9,11 @@ Self-hosted [Laravel Reverb](https://laravel.com/docs/reverb) in a single contai
 docker run -d --restart unless-stopped --name reverb-server -p 8000:8000 -p 8080:8080 terjen/laravel-reverb-server solo
 ```
 
-- Dashboard at <http://localhost:8000> · login `admin@admin.com` / `testing123`
+- Dashboard at <http://localhost:8000> · login `admin@admin.com` / `wspassword`
 - WebSocket at `ws://localhost:8080`
 - Public welcome page at `/` with a no-auth Send-ping tester
+
+Override the seeded admin via env on first boot — `-e SEED_ADMIN_EMAIL=you@example.com -e SEED_ADMIN_PASSWORD=...`. Subsequent boots `updateOrCreate`, so changing the env updates the existing admin.
 
 `solo` runs Reverb and the dashboard in one container. Multi-arch image (`linux/amd64`, `linux/arm64`) is on [Docker Hub](https://hub.docker.com/r/terjen/laravel-reverb-server). For TLS-fronted production, see [`docs/PROD-DEPLOYMENT.md`](docs/PROD-DEPLOYMENT.md).
 

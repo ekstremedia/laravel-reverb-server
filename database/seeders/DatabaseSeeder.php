@@ -10,11 +10,15 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $email = env('SEED_ADMIN_EMAIL', 'admin@admin.com');
+        $password = env('SEED_ADMIN_PASSWORD', 'wspassword');
+        $name = env('SEED_ADMIN_NAME', 'Admin');
+
         User::updateOrCreate(
-            ['email' => 'admin@admin.com'],
+            ['email' => $email],
             [
-                'name' => 'Admin',
-                'password' => Hash::make('testing123'),
+                'name' => $name,
+                'password' => Hash::make($password),
                 'email_verified_at' => now(),
             ],
         );
