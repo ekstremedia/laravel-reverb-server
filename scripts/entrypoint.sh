@@ -18,9 +18,10 @@ if [ "$1" = "solo" ]; then
     : "${REVERB_APP_KEY:=local-app-key}"
     : "${REVERB_APP_SECRET:=local-app-secret}"
     : "${APP_URL:=http://localhost:8000}"
+    : "${LOG_LEVEL:=info}"
     export BROADCAST_CONNECTION REVERB_HOST REVERB_PORT REVERB_SCHEME \
            REVERB_SERVER_HOST REVERB_SERVER_PORT \
-           REVERB_APP_ID REVERB_APP_KEY REVERB_APP_SECRET APP_URL
+           REVERB_APP_ID REVERB_APP_KEY REVERB_APP_SECRET APP_URL LOG_LEVEL
 fi
 
 if [ ! -f "$DB_FILE" ]; then
