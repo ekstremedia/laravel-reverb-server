@@ -33,6 +33,8 @@ docker run -d --restart unless-stopped --name reverb-server \
 
 `solo` runs both Reverb and FrankenPHP in the same container with sane localhost defaults. APP_KEY auto-generates and persists in the container's storage on first boot. For production splits across two containers, see Option A below.
 
+> **Going to production?** The `solo` one-liner above is for trying it out — it exposes Reverb directly on a host port with no TLS and assumes browser and PHP both connect via the same address. A real production deployment terminates TLS in nginx, binds Reverb to loopback, and uses different `REVERB_HOST` values for server-side and browser-side. See [`docs/PROD-DEPLOYMENT.md`](docs/PROD-DEPLOYMENT.md).
+
 ### Option A — prebuilt image (no clone needed)
 
 Multi-arch images (`linux/amd64`, `linux/arm64`) are published on Docker Hub: [`terjen/laravel-reverb-server`](https://hub.docker.com/r/terjen/laravel-reverb-server). Drop a `docker-compose.yml` like the one below next to a `.env` and `docker compose up -d` — the entrypoint generates and persists an `APP_KEY` in the storage volume on first boot, so no key juggling.
