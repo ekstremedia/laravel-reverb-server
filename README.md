@@ -7,9 +7,7 @@ Self-hosted [Laravel Reverb](https://laravel.com/docs/reverb) in a single contai
 ## Run it
 
 ```sh
-docker run -d --restart unless-stopped --name reverb-server \
-  -p 8000:8000 -p 8080:8080 \
-  terjen/laravel-reverb-server solo
+docker run -d --restart unless-stopped --name reverb-server -p 8000:8000 -p 8080:8080 terjen/laravel-reverb-server solo
 ```
 
 - Dashboard at <http://localhost:8000> · login `admin@admin.com` / `testing123`
