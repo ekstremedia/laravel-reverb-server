@@ -2,6 +2,8 @@
 
 A self-contained, dockerised [Laravel Reverb](https://laravel.com/docs/reverb) WebSocket server with a small admin dashboard. Spin it up once, then point any other Laravel application at it for real-time broadcasting.
 
+![Dashboard](docs/screenshots/dashboard.png)
+
 ## What it gives you
 
 - **WebSocket server** on `:8080` (Pusher-protocol compatible — works with Laravel Echo out of the box).
@@ -9,6 +11,16 @@ A self-contained, dockerised [Laravel Reverb](https://laravel.com/docs/reverb) W
 - **Stats persisted to SQLite** via listeners on every Reverb lifecycle event (`MessageSent`, `MessageReceived`, `ChannelCreated`, `ChannelRemoved`, `ConnectionPruned`).
 - **Log viewer** at `/settings/logs` ([opcodes/log-viewer](https://github.com/opcodesio/log-viewer)).
 - **Copy-paste `.env` block** rendered on the dashboard so wiring up another Laravel app is one paste away.
+
+## Screenshots
+
+The public welcome page — exercises the WebSocket round-trip without logging in:
+
+![Welcome page with public ping tester](docs/screenshots/welcome.png)
+
+The log viewer surfaces every server-side `Log::*` entry — including the `ping broadcast` line written on each public ping:
+
+![Log viewer showing ping broadcast entries](docs/screenshots/log-viewer.png)
 
 ## Requirements
 
