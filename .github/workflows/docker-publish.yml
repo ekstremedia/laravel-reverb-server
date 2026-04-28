@@ -11,6 +11,10 @@ on:
         required: true
         default: 'latest'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   IMAGE_NAME: ekstremedia/laravel-reverb-server
 
