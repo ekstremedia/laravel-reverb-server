@@ -17,6 +17,22 @@ A self-contained, dockerised [Laravel Reverb](https://laravel.com/docs/reverb) W
 
 ## Get it running
 
+### One-liner (single container, both processes)
+
+For a quick spin-up — same shape as Mailpit:
+
+```sh
+docker run -d --restart unless-stopped --name reverb-server \
+  -p 8000:8000 -p 8080:8080 \
+  terjen/laravel-reverb-server solo
+```
+
+- Dashboard: <http://localhost:8000>
+- Reverb WebSocket: `ws://localhost:8080`
+- Login: `admin@admin.com` / `testing123`
+
+`solo` runs both Reverb and FrankenPHP in the same container with sane localhost defaults. APP_KEY auto-generates and persists in the container's storage on first boot. For production splits across two containers, see Option A below.
+
 ### Option A — prebuilt image (no clone needed)
 
 Multi-arch images (`linux/amd64`, `linux/arm64`) are published on Docker Hub: [`terjen/laravel-reverb-server`](https://hub.docker.com/r/terjen/laravel-reverb-server). Drop a `docker-compose.yml` like the one below next to a `.env` and `docker compose up -d` — the entrypoint generates and persists an `APP_KEY` in the storage volume on first boot, so no key juggling.
