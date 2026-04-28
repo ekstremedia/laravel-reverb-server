@@ -65,6 +65,32 @@ npm install --save-dev laravel-echo pusher-js
 
 …and broadcast as usual (`event(new YourEvent(...))` on a `ShouldBroadcast` event). Counters tick on this server's dashboard.
 
+## Public API
+
+`GET /api/stats` returns JSON with current Reverb status and the last 7 days of usage. No auth required:
+
+```json
+{
+  "status": "online",
+  "checked_at": "2026-04-28T14:51:21+00:00",
+  "reverb": { "host": "laravel-reverb-server.test", "port": 8080, "scheme": "http" },
+  "totals": {
+    "message_sent":     { "today": 0, "total": 0 },
+    "message_received": { "today": 0, "total": 0 },
+    "channel_created":  { "today": 0, "total": 0 },
+    "channel_removed":  { "today": 0, "total": 0 },
+    "connection_pruned":{ "today": 0, "total": 0 }
+  },
+  "last_7_days": {
+    "message_sent":     [ { "date": "2026-04-22", "count": 0 }, ... ],
+    "message_received": [ ... ],
+    "channel_created":  [ ... ],
+    "channel_removed":  [ ... ],
+    "connection_pruned":[ ... ]
+  }
+}
+```
+
 ## Make targets
 
 | Target                | Does                                                    |
