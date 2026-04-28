@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  IMAGE_NAME: ekstremedia/laravel-reverb-server
+  IMAGE_NAME: terjen/laravel-reverb-server
 
 jobs:
   build-and-push:
