@@ -1,0 +1,45 @@
+services:
+  app:
+    build:
+      context: .
+    image: laravel-reverb-server:latest
+    container_name: reverb-app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      APP_URL: ${APP_URL:-http://laravel-reverb-server.test:8120}
+      REVERB_SERVER_HOST: 0.0.0.0
+      REVERB_SERVER_PORT: 8080
+    ports:
+      - "${APP_PORT:-8120}:8000"
+    volumes:
+      - sqlite-data:/app/database
+      - app-storage:/app/storage
+    depends_on:
+      - reverb
+    command: ["frankenphp", "php-server", "--listen", "0.0.0.0:8000", "--root", "public/"]
+
+  reverb:
+    image: laravel-reverb-server:latest
+    build:
+      context: .
+    container_name: reverb-ws
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      REVERB_SERVER_HOST: 0.0.0.0
+      REVERB_SERVER_PORT: 8080
+    ports:
+      - "${REVERB_PORT:-8080}:8080"
+    volumes:
+      - sqlite-data:/app/database
+      - app-storage:/app/storage
+    networks:
+      default:
+        aliases:
+          - ${REVERB_HOST:-laravel-reverb-server.test}
+    command: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8080", "--no-interaction"]
+
+volumes:
+  sqlite-data:
+  app-storage:
