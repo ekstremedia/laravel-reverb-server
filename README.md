@@ -58,7 +58,17 @@ Clone, then:
 make up
 ```
 
-Spins up the two-container compose stack (FrankenPHP app + Reverb daemon), migrates, seeds, prints a copy-paste `.env` block. The `Makefile` lists the rest of the targets (logs, shell, tinker, fresh, test, pint).
+Spins up the two-container compose stack (FrankenPHP app + Reverb daemon), migrates, seeds, prints a copy-paste `.env` block.
+
+| | |
+|---|---|
+| `make up` / `make down` | start / stop the stack |
+| `make logs` | tail combined logs (`logs-app`, `logs-reverb` for one) |
+| `make shell` / `make tinker` | bash / tinker into the app container |
+| `make fresh` | drop, migrate, seed |
+| `make ping` / `make stats` | broadcast a test event / print counter table |
+| `make test` / `make pint` | Pest suite / Pint formatter |
+| `make help` | full target list |
 
 Requires PHP 8.4 (Laravel 13).
 
