@@ -13,6 +13,46 @@ docker run -d --restart unless-stopped --name reverb-server -p 8000:8000 -p 8080
 - WebSocket at `ws://localhost:8080`
 - Public welcome page at `/` with a no-auth Send-ping tester
 
+### Stop & restart
+
+The container is named `reverb-server`, so re-running `docker run …` will fail with "container name already in use". Remove it first:
+
+```sh
+docker rm -f reverb-server
+```
+
+Then start it again with whichever flags you need. The SQLite db lives inside the container layer — if you want stats to survive a remove, mount a volume: `-v reverb-data:/app/database`.
+
+### Remapping ports
+
+The container always listens on `:8000` (dashboard / HTTP) and `:8080` (WebSocket) **inside**. The `-p HOST:CONTAINER` flag only changes which port the host exposes — the container itself can't see the host-side port, so anywhere a port is *advertised* to a client (the dashboard's `.env` panel, the welcome page's WebSocket URL, the `/api/stats` payload) you need a matching env override.
+
+**WebSocket port (8080).** This is the one that bites — Echo / pusher-js connects to whatever the dashboard advertises, so if it doesn't match the published port the connection just fails. Pass `-e REVERB_PORT=<host port>`:
+
+```sh
+docker rm -f reverb-server 2>/dev/null
+docker run -d --restart unless-stopped --name reverb-server -p 8000:8000 -p 8086:8080 -e REVERB_PORT=8086 terjen/laravel-reverb-server solo
+```
+
+**HTTP / dashboard port (8000).** If `8000` is also taken, remap it too. Set `APP_URL` so links rendered by the dashboard (and the welcome page footer) point at the right host port:
+
+```sh
+docker rm -f reverb-server 2>/dev/null
+docker run -d --restart unless-stopped --name reverb-server -p 9000:8000 -p 8086:8080 -e APP_URL=http://localhost:9000 -e REVERB_PORT=8086 terjen/laravel-reverb-server solo
+```
+
+Then browse <http://localhost:9000>.
+
+**Different public host (reverse proxy, TLS).** If clients reach the WS through a domain rather than `localhost`, override the host and scheme too — add these flags to the `docker run` line:
+
+```sh
+-e REVERB_HOST=ws.example.com -e REVERB_SCHEME=https -e REVERB_PORT=443
+```
+
+Rule of thumb: `-p HOST:CONTAINER` for what Docker exposes, `-e REVERB_HOST/REVERB_PORT/REVERB_SCHEME/APP_URL` for what the container *tells the world about itself*.
+
+### Seeded admin
+
 Override the seeded admin via env on first boot — `-e SEED_ADMIN_EMAIL=you@example.com -e SEED_ADMIN_PASSWORD=...`. Subsequent boots `updateOrCreate`, so changing the env updates the existing admin.
 
 `solo` runs Reverb and the dashboard in one container. Multi-arch image (`linux/amd64`, `linux/arm64`) is on [Docker Hub](https://hub.docker.com/r/terjen/laravel-reverb-server). For TLS-fronted production, see [`docs/PROD-DEPLOYMENT.md`](docs/PROD-DEPLOYMENT.md).
